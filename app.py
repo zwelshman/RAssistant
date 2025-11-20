@@ -212,6 +212,15 @@ except KeyError:
     st.stop()
 
 # Example questions (always visible)
+# Tips section (always visible)
+st.markdown("### 📌 Tips for Better Results")
+st.markdown("""
+- Be specific about your data structure and variables
+- Mention any packages you prefer (tidyverse, data.table, etc.)
+- Share error messages if you're debugging
+- Specify your desired output format
+""")
+
 st.markdown("### 💡 Example Questions")
 examples = [
     "How do I create a violin plot with ggplot2?",
@@ -315,23 +324,11 @@ If a user asks a question that is nothing to do with data analysis or R you must
                         use_container_width=True
                     )
                 
-                with col2:
-                    if st.button("🔄 Ask Another Question", use_container_width=True):
-                        st.session_state.current_question = ''
-                        st.rerun()
-                
             except Exception as e:
                 st.error(f"❌ Error: {str(e)}")
                 st.info("💡 Please check your API key and try again")
 
-# Tips section (always visible)
-st.markdown("### 📌 Tips for Better Results")
-st.markdown("""
-- Be specific about your data structure and variables
-- Mention any packages you prefer (tidyverse, data.table, etc.)
-- Share error messages if you're debugging
-- Specify your desired output format
-""")
+
 
 # Footer
 st.markdown("---")
