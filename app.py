@@ -211,10 +211,8 @@ If the question lacks necessary details (e.g., data structure, specific requirem
                     file_name="r_solution.R",
                     mime="text/plain"
                 )
+        
             with col2:
-                if st.button("🔄 Ask Follow-up"):
-                    st.info("💡 Just type your follow-up question above!")
-            with col3:
                 if st.button("⭐ New Question"):
                     st.session_state.current_question = ''
                     st.rerun()
