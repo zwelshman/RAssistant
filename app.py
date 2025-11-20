@@ -165,9 +165,10 @@ Provide your response in two parts:
 
 1. **R Code**: Well-commented, production-ready R code following best practices
 2. **Summary**: Brief explanation of the approach, key functions used, and any important considerations
-3. Only generate one example and make all examples related to healthcare and electronic records. 
 
 Use <scratchpad> tags if you need to think through complex multi-step problems before responding.
+
+Only generate one example code reponse to the specific question and make all examples related to healthcare and electronic records. 
 
 If the question lacks necessary details (e.g., data structure, specific requirements), ask for clarification first."""
             
