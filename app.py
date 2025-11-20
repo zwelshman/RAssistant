@@ -80,6 +80,10 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+# Initialize session state for the question
+if 'current_question' not in st.session_state:
+    st.session_state.current_question = ''
+
 # Sidebar
 with st.sidebar:
     st.markdown("## 🎯 Quick Tips")
@@ -100,7 +104,8 @@ with st.sidebar:
     ]
     for example in examples:
         if st.button(example, key=example):
-            st.session_state.example_question = example
+            st.session_state.current_question = example
+            st.rerun()
     
     st.markdown("---")
     st.markdown("### ⚡ Powered by Claude Sonnet 4.5")
@@ -116,16 +121,15 @@ except KeyError:
 col1, col2 = st.columns([3, 1])
 
 with col1:
-    # Pre-fill with example if clicked
-    default_value = st.session_state.get('example_question', '')
     r_question = st.text_area(
         "💭 What R challenge can I help you solve?",
         height=150,
         placeholder="e.g., How do I create a violin plot with ggplot2 showing multiple groups?",
-        value=default_value
+        value=st.session_state.current_question,
+        key="question_input"
     )
-    if default_value:
-        st.session_state.example_question = ''  # Clear after use
+    # Update session state when text area changes
+    st.session_state.current_question = r_question
 
 with col2:
     st.markdown("<br>", unsafe_allow_html=True)
@@ -178,7 +182,7 @@ If the question lacks necessary details (e.g., data structure, specific requirem
                 with client.messages.stream(
                     model="claude-sonnet-4-5-20250929",
                     max_tokens=20000,
-                    temperature=0.1,
+                    temperature=1,
                     messages=[{
                         "role": "user",
                         "content": [{
@@ -215,6 +219,7 @@ If the question lacks necessary details (e.g., data structure, specific requirem
                         st.info("💡 Just type your follow-up question above!")
                 with col3:
                     if st.button("⭐ New Question"):
+                        st.session_state.current_question = ''
                         st.rerun()
             
         except Exception as e:
