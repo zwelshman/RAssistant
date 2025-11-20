@@ -88,17 +88,26 @@ st.markdown("""
     
     /* Code blocks */
     .stMarkdown code {
-        background: #f5f5f5;
+        background: #1e1e1e;
+        color: #d4d4d4;
         padding: 0.2rem 0.4rem;
         border-radius: 4px;
         font-size: 14px;
     }
     
     pre {
-        background: #f5f5f5 !important;
+        background: #1e1e1e !important;
         border-radius: 8px;
-        padding: 1rem;
-        border: 1px solid #e0e0e0;
+        padding: 1.5rem;
+        border: 1px solid #333;
+    }
+    
+    pre code {
+        background: transparent !important;
+        color: #d4d4d4 !important;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.6;
     }
     
     /* Example chips */
