@@ -5,13 +5,12 @@ import re
 st.title("R Programming Assistant")
 st.write("Ask me any R programming question!")
 
-# Input for API key (stored in session)
-if 'api_key' not in st.session_state:
-    st.session_state.api_key = ''
-
-api_key = st.text_input("Enter your Anthropic API Key:", type="password", value=st.session_state.api_key)
-if api_key:
-    st.session_state.api_key = api_key
+# Get API key from secrets
+try:
+    api_key = st.secrets["ANTHROPIC_API_KEY"]
+except KeyError:
+    st.error("Please set up your ANTHROPIC_API_KEY in Streamlit secrets!")
+    st.stop()
 
 # Question input
 r_question = st.text_area("Enter your R question:", height=150)
@@ -30,7 +29,7 @@ def format_response(text):
     
     return formatted_output
 
-if st.button("Get Answer") and api_key and r_question:
+if st.button("Get Answer") and r_question:
     try:
         client = anthropic.Anthropic(api_key=api_key)
         
