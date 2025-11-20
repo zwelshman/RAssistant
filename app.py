@@ -69,7 +69,7 @@ If a user asks a question that is nothing to do with data analysis or R you must
         
         with client.messages.stream(
             #model="claude-sonnet-4-5-20250929",
-            model='claude-opus-4-1',
+            model='claude-haiku-4-5',
             max_tokens=2000,
             messages=messages_with_context
         ) as stream:
