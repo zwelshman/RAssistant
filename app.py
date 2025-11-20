@@ -13,7 +13,7 @@ except KeyError:
     st.stop()
 
 # Question input
-R_QUESTION = st.text_area("Enter your R question:", height=150)
+r_question = st.text_area("Enter your R question:", height=150)
 
 def format_response(text):
     """Format the response to display R code with syntax highlighting."""
@@ -29,7 +29,7 @@ def format_response(text):
     
     return formatted_output
 
-if st.button("Get Answer") and R_QUESTION:
+if st.button("Get Answer") and r_question:
     try:
         client = anthropic.Anthropic(api_key=api_key)
         
