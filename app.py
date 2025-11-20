@@ -172,8 +172,7 @@ Use <scratchpad> tags if you need to think through complex multi-step problems b
 
 If the question lacks necessary details (e.g., data structure, specific requirements), ask for clarification first.
 
-If a user asks a question that is nothing to do with data analysis or R you are obliged to ask if they are using the right tool
-for the job."""
+If a user asks a question that is nothing to do with data analysis or R you you must generate a very short response."""
             
             # Create a container for the response
             st.markdown('<div class="response-container">', unsafe_allow_html=True)
