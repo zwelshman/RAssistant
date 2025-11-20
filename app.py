@@ -159,6 +159,21 @@ st.markdown("""
         font-weight: 600;
     }
     
+    /* Examples and tips sections */
+    .main h3 {
+        color: #333;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .main ul {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
     /* Clean spacing */
     .block-container {
         padding-top: 2rem;
@@ -187,23 +202,21 @@ except KeyError:
     st.error("🔑 Please configure your ANTHROPIC_API_KEY in Streamlit secrets")
     st.stop()
 
-# Example questions (collapsible)
-with st.expander("💡 Try these examples", expanded=False):
-    examples = [
-        "How do I create a violin plot with ggplot2?",
-        "Read and clean CSV data with dplyr",
-        "Build a linear regression model",
-        "Pivot data from wide to long format",
-        "Create a correlation heatmap",
-        "Handle missing values in a dataset"
-    ]
-    
-    cols = st.columns(2)
-    for idx, example in enumerate(examples):
-        with cols[idx % 2]:
-            if st.button(example, key=f"ex_{idx}", use_container_width=True):
-                st.session_state.current_question = example
-                st.rerun()
+# Example questions (always visible)
+st.markdown("### 💡 Example Questions")
+examples = [
+    "How do I create a violin plot with ggplot2?",
+    "Read and clean CSV data with dplyr",
+    "Build a linear regression model",
+    "Pivot data from wide to long format",
+    "Create a correlation heatmap",
+    "Handle missing values in a dataset"
+]
+
+cols = st.columns(2)
+for idx, example in enumerate(examples):
+    with cols[idx % 2]:
+        st.markdown(f"- {example}")
 
 # Main question input
 r_question = st.text_area(
@@ -304,15 +317,14 @@ If a user asks a question that is nothing to do with data analysis or R you must
                 st.error(f"❌ Error: {str(e)}")
                 st.info("💡 Please check your API key and try again")
 
-# Tips section (minimal)
-with st.expander("💡 Tips for better results"):
-    st.markdown("""
-    **Get the most helpful responses:**
-    - Be specific about your data structure and variables
-    - Mention any packages you prefer (tidyverse, data.table, etc.)
-    - Share error messages if you're debugging
-    - Specify your desired output format
-    """)
+# Tips section (always visible)
+st.markdown("### 📌 Tips for Better Results")
+st.markdown("""
+- Be specific about your data structure and variables
+- Mention any packages you prefer (tidyverse, data.table, etc.)
+- Share error messages if you're debugging
+- Specify your desired output format
+""")
 
 # Footer
 st.markdown("---")
