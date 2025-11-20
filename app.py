@@ -161,11 +161,12 @@ Here is the R question or problem you need to solve:
 {r_question}
 </r_question>
 
-Provide your response in two parts and with one code example that is specific to health care, do not include
-a lot of methods or examples:
+Provide your response in two parts:
 
 1. **R Code**: Well-commented, production-ready R code following best practices
 2. **Summary**: Brief explanation of the approach, key functions used, and any important considerations
+
+Provide one code example that is specific to health care, do not include a lot of methods or examples.
 
 Use <scratchpad> tags if you need to think through complex multi-step problems before responding. 
 
