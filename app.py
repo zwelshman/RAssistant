@@ -29,7 +29,7 @@ def format_response(text):
     
     return formatted_output
 
-if st.button("Get Answer") and r_question:
+if st.button("Get Answer") and R_QUESTION:
     try:
         client = anthropic.Anthropic(api_key=api_key)
         
