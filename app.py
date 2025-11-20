@@ -219,10 +219,7 @@ with col1:
     examples = [
         "How do I create a violin plot with ggplot2?",
         "Read and clean CSV data with dplyr",
-        "Build a linear regression model",
         "Pivot data from wide to long format",
-        "Create a correlation heatmap",
-        "Handle missing values in a dataset"
     ]
     
     for example in examples:
