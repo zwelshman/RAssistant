@@ -70,6 +70,7 @@ If a user asks a question that is nothing to do with data analysis or R you must
         with client.messages.stream(
             model="claude-sonnet-4-5-20250929",
             max_tokens=8000,
+            temperature=0.1,
             messages=messages_with_context
         ) as stream:
             for text in stream.text_stream:
