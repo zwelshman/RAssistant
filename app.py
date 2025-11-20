@@ -173,54 +173,50 @@ If the question lacks necessary details (e.g., data structure, specific requirem
             full_response = ""
             
             # Create a container for the response
-            response_container = st.container()
+            st.markdown('<div class="response-container">', unsafe_allow_html=True)
             
-            with response_container:
-                st.markdown('<div class="response-container">', unsafe_allow_html=True)
-                
-                # Stream the response
-                with client.messages.stream(
-                    model="claude-sonnet-4-5-20250929",
-                    max_tokens=20000,
-                    temperature=1,
-                    messages=[{
-                        "role": "user",
-                        "content": [{
-                            "type": "text",
-                            "text": prompt
-                        }]
+            # Create placeholder for streaming text
+            response_placeholder = st.empty()
+            
+            # Stream the response
+            with client.messages.stream(
+                model="claude-sonnet-4-5-20250929",
+                max_tokens=20000,
+                temperature=1,
+                messages=[{
+                    "role": "user",
+                    "content": [{
+                        "type": "text",
+                        "text": prompt
                     }]
-                ) as stream:
-                    for text in stream.text_stream:
-                        full_response += text
-                
-                # Format and display the final response
-                formatted_parts = format_response(full_response)
-                
-                for part_type, content in formatted_parts:
-                    if part_type == 'text':
-                        st.markdown(content)
-                    else:  # code
-                        st.code(content, language='r')
-                
-                st.markdown('</div>', unsafe_allow_html=True)
-                
-                # Add action buttons
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.download_button(
-                        label="📥 Download Code",
-                        data=full_response,
-                        file_name="r_solution.R",
-                        mime="text/plain"
-                    )
-                with col2:
-                    if st.button("🔄 Ask Follow-up"):
-                        st.info("💡 Just type your follow-up question above!")
-                with col3:
-                    if st.button("⭐ New Question"):
-                        st.session_state.current_question = ''
-                        st.rerun()
+                }]
+            ) as stream:
+                for text in stream.text_stream:
+                    full_response += text
+                    # Update the display in real-time
+                    response_placeholder.markdown(full_response + "▌")
+            
+            # Remove cursor and show final response
+            response_placeholder.markdown(full_response)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Add action buttons
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.download_button(
+                    label="📥 Download Code",
+                    data=full_response,
+                    file_name="r_solution.R",
+                    mime="text/plain"
+                )
+            with col2:
+                if st.button("🔄 Ask Follow-up"):
+                    st.info("💡 Just type your follow-up question above!")
+            with col3:
+                if st.button("⭐ New Question"):
+                    st.session_state.current_question = ''
+                    st.rerun()
             
         except Exception as e:
             st.error(f"❌ Oops! Something went wrong: {str(e)}")
