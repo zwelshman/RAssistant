@@ -69,6 +69,13 @@ st.markdown("""
     .sidebar .sidebar-content {
         background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
     }
+    /* Remove white background from markdown in response container */
+    .response-container .stMarkdown {
+        background: transparent !important;
+    }
+    .response-container div[data-testid="stMarkdownContainer"] {
+        background: transparent !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -135,19 +142,6 @@ with col2:
     st.markdown("<br>", unsafe_allow_html=True)
     submit_button = st.button("🚀 Get Solution", use_container_width=True)
 
-def format_response(text):
-    """Format the response to display R code with syntax highlighting."""
-    parts = re.split(r'<r_code>|</r_code>', text)
-    
-    formatted_output = []
-    for i, part in enumerate(parts):
-        if i % 2 == 0:  # Text outside r_code tags
-            formatted_output.append(('text', part))
-        else:  # Code inside r_code tags
-            formatted_output.append(('code', part))
-    
-    return formatted_output
-
 if submit_button and r_question:
     with st.spinner('🔮 Conjuring your R solution...'):
         try:
@@ -172,39 +166,33 @@ Use <scratchpad> tags if you need to think through complex multi-step problems b
 
 If the question lacks necessary details (e.g., data structure, specific requirements), ask for clarification first."""
             
-            full_response = ""
-            
             # Create a container for the response
             st.markdown('<div class="response-container">', unsafe_allow_html=True)
             
-            # Create placeholder for streaming text
-            response_placeholder = st.empty()
-            
-            # Stream the response
-            with client.messages.stream(
-                model="claude-sonnet-4-5-20250929",
-                max_tokens=20000,
-                temperature=1,
-                messages=[{
-                    "role": "user",
-                    "content": [{
-                        "type": "text",
-                        "text": prompt
+            # Generator function for streaming
+            def stream_response():
+                with client.messages.stream(
+                    model="claude-sonnet-4-5-20250929",
+                    max_tokens=20000,
+                    temperature=1,
+                    messages=[{
+                        "role": "user",
+                        "content": [{
+                            "type": "text",
+                            "text": prompt
+                        }]
                     }]
-                }]
-            ) as stream:
-                for text in stream.text_stream:
-                    full_response += text
-                    # Update the display in real-time
-                    response_placeholder.markdown(full_response + "▌")
+                ) as stream:
+                    for text in stream.text_stream:
+                        yield text
             
-            # Remove cursor and show final response
-            response_placeholder.markdown(full_response)
+            # Stream and collect the response
+            full_response = st.write_stream(stream_response())
             
             st.markdown('</div>', unsafe_allow_html=True)
             
             # Add action buttons
-            col1, col2, col3 = st.columns(3)
+            col1, col2 = st.columns(2)
             with col1:
                 st.download_button(
                     label="📥 Download Code",
@@ -212,7 +200,6 @@ If the question lacks necessary details (e.g., data structure, specific requirem
                     file_name="r_solution.R",
                     mime="text/plain"
                 )
-        
             with col2:
                 if st.button("⭐ New Question"):
                     st.session_state.current_question = ''
