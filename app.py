@@ -211,30 +211,33 @@ except KeyError:
     st.error("🔑 Please configure your ANTHROPIC_API_KEY in Streamlit secrets")
     st.stop()
 
-# Example questions (always visible)
-# Tips section (always visible)
-st.markdown("### 📌 Tips for Better Results")
-st.markdown("""
-- Be specific about your data structure and variables
-- Mention any packages you prefer (tidyverse, data.table, etc.)
-- Share error messages if you're debugging
-- Specify your desired output format
-""")
+# Examples and Tips side by side (above text box)
+col1, col2 = st.columns(2)
 
-st.markdown("### 💡 Example Questions")
-examples = [
-    "How do I create a violin plot with ggplot2?",
-    "Read and clean CSV data with dplyr",
-    "Build a linear regression model",
-    "Pivot data from wide to long format",
-    "Create a correlation heatmap",
-    "Handle missing values in a dataset"
-]
-
-cols = st.columns(2)
-for idx, example in enumerate(examples):
-    with cols[idx % 2]:
+with col1:
+    st.markdown("### 💡 Example Questions")
+    examples = [
+        "How do I create a violin plot with ggplot2?",
+        "Read and clean CSV data with dplyr",
+        "Build a linear regression model",
+        "Pivot data from wide to long format",
+        "Create a correlation heatmap",
+        "Handle missing values in a dataset"
+    ]
+    
+    for example in examples:
         st.markdown(f"- {example}")
+
+with col2:
+    st.markdown("### 📌 Tips for Better Results")
+    st.markdown("""
+    - Be specific about your data structure and variables
+    - Mention any packages you prefer (tidyverse, data.table, etc.)
+    - Share error messages if you're debugging
+    - Specify your desired output format
+    """)
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 # Main question input
 r_question = st.text_area(
@@ -324,11 +327,14 @@ If a user asks a question that is nothing to do with data analysis or R you must
                         use_container_width=True
                     )
                 
+                with col2:
+                    if st.button("🔄 Ask Another Question", use_container_width=True):
+                        st.session_state.current_question = ''
+                        st.rerun()
+                
             except Exception as e:
                 st.error(f"❌ Error: {str(e)}")
                 st.info("💡 Please check your API key and try again")
-
-
 
 # Footer
 st.markdown("---")
