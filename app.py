@@ -33,6 +33,24 @@ if st.button("Get Answer") and r_question:
     try:
         client = anthropic.Anthropic(api_key=api_key)
         
+        # Create the prompt with the actual question substituted
+        prompt = f"""You are an expert R programmer and data scientist. 
+
+Here is the R question or problem you need to solve:
+
+<r_question>
+{r_question}
+</r_question>
+
+Provide your response in two parts:
+
+1. **R Code**: Well-commented, production-ready R code following best practices
+2. **Summary**: Brief explanation of the approach, key functions used, and any important considerations
+
+Use <scratchpad> tags if you need to think through complex multi-step problems before responding.
+
+If the question lacks necessary details (e.g., data structure, specific requirements), ask for clarification first."""
+        
         # Create empty container for streaming response
         full_response = ""
         
@@ -45,7 +63,7 @@ if st.button("Get Answer") and r_question:
                 "role": "user",
                 "content": [{
                     "type": "text",
-                    "text": "You are an expert R programmer and data scientist. \n\nHere is the R question or problem you need to solve:\n\n<r_question>\n{{R_QUESTION}}\n</r_question>\n\nProvide your response in two parts:\n\n1. **R Code**: Well-commented, production-ready R code following best practices\n2. **Summary**: Brief explanation of the approach, key functions used, and any important considerations\n\nUse <scratchpad> tags if you need to think through complex multi-step problems before responding.\n\nIf the question lacks necessary details (e.g., data structure, specific requirements), ask for clarification first."
+                    "text": prompt
                 }]
             }]
         ) as stream:
