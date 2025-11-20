@@ -4,156 +4,244 @@ import re
 
 # Page config
 st.set_page_config(
-    page_title="R Code Wizard 🧙‍♂️",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="R Code Wizard",
+    page_icon="🧙‍♂️",
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
-# Custom CSS
+# Clean, modern CSS
 st.markdown("""
     <style>
+    /* Main background */
     .main {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #f8f9fa;
     }
+    
+    /* Hide streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Custom header */
+    .custom-header {
+        text-align: center;
+        padding: 2rem 0 3rem 0;
+    }
+    
+    .custom-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+    }
+    
+    .custom-header p {
+        font-size: 1.1rem;
+        color: #666;
+        font-weight: 400;
+    }
+    
+    /* Text area styling */
     .stTextArea textarea {
-        background-color: #2d3748;
-        color: #e2e8f0;
-        border-radius: 10px;
-        border: 2px solid #4a5568;
+        background-color: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
         font-size: 16px;
-    }
-    .stButton button {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 25px;
-        padding: 15px 40px;
-        font-size: 18px;
-        font-weight: bold;
-        border: none;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        padding: 16px;
         transition: all 0.3s ease;
     }
-    .stButton button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    
+    .stTextArea textarea:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
-    .title-container {
-        text-align: center;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        margin-bottom: 30px;
-    }
-    .title-text {
-        font-size: 3.5em;
-        font-weight: bold;
-        background: linear-gradient(90deg, #ffd89b 0%, #19547b 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin: 0;
-    }
-    .subtitle-text {
+    
+    /* Button styling */
+    .stButton button {
+        background: #667eea;
         color: white;
-        font-size: 1.3em;
-        margin-top: 10px;
+        border-radius: 10px;
+        padding: 0.75rem 2rem;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        width: 100%;
+        transition: all 0.3s ease;
     }
-    .response-container {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 25px;
-        margin-top: 20px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    
+    .stButton button:hover {
+        background: #5568d3;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
-    .sidebar .sidebar-content {
-        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    
+    /* Response container */
+    .response-box {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    /* Remove white background from markdown in response container */
-    .response-container .stMarkdown {
-        background: transparent !important;
+    
+    /* Code blocks */
+    .stMarkdown code {
+        background: #f5f5f5;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-size: 14px;
     }
-    .response-container div[data-testid="stMarkdownContainer"] {
-        background: transparent !important;
+    
+    pre {
+        background: #f5f5f5 !important;
+        border-radius: 8px;
+        padding: 1rem;
+        border: 1px solid #e0e0e0;
+    }
+    
+    /* Example chips */
+    .example-chip {
+        display: inline-block;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        margin: 0.25rem;
+        font-size: 14px;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .example-chip:hover {
+        border-color: #667eea;
+        color: #667eea;
+        background: #f0f2ff;
+    }
+    
+    /* Info box */
+    .info-box {
+        background: #f0f2ff;
+        border-left: 4px solid #667eea;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        font-size: 14px;
+        color: #444;
+    }
+    
+    /* Download button */
+    .stDownloadButton button {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+        border-radius: 10px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 600;
+    }
+    
+    .stDownloadButton button:hover {
+        background: #f0f2ff;
+    }
+    
+    /* Spinner */
+    .stSpinner > div {
+        border-top-color: #667eea !important;
+    }
+    
+    /* Expander */
+    .streamlit-expanderHeader {
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        font-weight: 600;
+    }
+    
+    /* Clean spacing */
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 900px;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # Header
 st.markdown("""
-    <div class="title-container">
-        <h1 class="title-text">🧙‍♂️ R Code Wizard</h1>
-        <p class="subtitle-text">Your magical assistant for R programming ✨</p>
+    <div class="custom-header">
+        <h1>🧙‍♂️ R Code Wizard</h1>
+        <p>Your AI assistant for R programming</p>
     </div>
 """, unsafe_allow_html=True)
 
-# Initialize session state for the question
+# Initialize session state
 if 'current_question' not in st.session_state:
     st.session_state.current_question = ''
+if 'show_examples' not in st.session_state:
+    st.session_state.show_examples = True
 
-# Sidebar
-with st.sidebar:
-    st.markdown("## 🎯 Quick Tips")
-    st.info("""
-    **Get the best results:**
-    - Be specific about your data structure
-    - Mention packages you prefer
-    - Share error messages if debugging
-    - Specify output format needs
-    """)
-    
-    st.markdown("## 📚 Example Questions")
-    examples = [
-        "How do I pivot data with dplyr?",
-        "Create a ggplot2 scatter plot",
-        "Read and clean CSV data",
-        "Build a linear regression model"
-    ]
-    for example in examples:
-        if st.button(example, key=example):
-            st.session_state.current_question = example
-            st.rerun()
-    
-    st.markdown("---")
-    st.markdown("### ⚡ Powered by Claude Sonnet 4.5")
-
-# Get API key from secrets
+# Get API key
 try:
     api_key = st.secrets["ANTHROPIC_API_KEY"]
 except KeyError:
-    st.error("🔑 Please set up your ANTHROPIC_API_KEY in Streamlit secrets!")
+    st.error("🔑 Please configure your ANTHROPIC_API_KEY in Streamlit secrets")
     st.stop()
 
-# Question input with columns for better layout
-col1, col2 = st.columns([3, 1])
+# Example questions (collapsible)
+if st.session_state.show_examples:
+    with st.expander("💡 Try these examples", expanded=False):
+        examples = [
+            "How do I create a violin plot with ggplot2?",
+            "Read and clean CSV data with dplyr",
+            "Build a linear regression model",
+            "Pivot data from wide to long format",
+            "Create a correlation heatmap",
+            "Handle missing values in a dataset"
+        ]
+        
+        cols = st.columns(2)
+        for idx, example in enumerate(examples):
+            with cols[idx % 2]:
+                if st.button(example, key=f"ex_{idx}", use_container_width=True):
+                    st.session_state.current_question = example
+                    st.session_state.show_examples = False
+                    st.rerun()
 
-with col1:
-    r_question = st.text_area(
-        "💭 What R challenge can I help you solve?",
-        height=150,
-        placeholder="e.g., How do I create a violin plot with ggplot2 showing multiple groups?",
-        value=st.session_state.current_question,
-        key="question_input"
-    )
-    # Update session state when text area changes
-    st.session_state.current_question = r_question
+# Main question input
+r_question = st.text_area(
+    "What would you like help with?",
+    height=120,
+    placeholder="Example: How do I create a bar chart showing patient outcomes by treatment group?",
+    value=st.session_state.current_question,
+    key="question_input",
+    label_visibility="visible"
+)
 
-with col2:
-    st.markdown("<br>", unsafe_allow_html=True)
-    submit_button = st.button("🚀 Get Solution", use_container_width=True)
+# Update session state
+st.session_state.current_question = r_question
+
+# Submit button
+submit_button = st.button("✨ Generate Solution", type="primary", use_container_width=True)
 
 def remove_scratchpad(text):
     """Remove scratchpad tags and their content from the response."""
-    # Remove everything between <scratchpad> and </scratchpad> tags
     cleaned_text = re.sub(r'<scratchpad>.*?</scratchpad>', '', text, flags=re.DOTALL)
     return cleaned_text.strip()
 
-if submit_button and r_question:
-    with st.spinner('🔮 Conjuring your R solution...'):
-        try:
-            client = anthropic.Anthropic(api_key=api_key)
-            
-            prompt = f"""You are an expert R programmer and data scientist. 
+# Process request
+if submit_button:
+    if not r_question:
+        st.warning("👆 Please enter your question above")
+    else:
+        # Hide examples after first submission
+        st.session_state.show_examples = False
+        
+        with st.spinner('🔮 Generating your solution...'):
+            try:
+                client = anthropic.Anthropic(api_key=api_key)
+                
+                prompt = f"""You are an expert R programmer and data scientist. 
 
 Here is the R question or problem you need to solve:
 
@@ -172,13 +260,12 @@ Use <scratchpad> tags if you need to think through complex multi-step problems b
 
 If the question lacks necessary details (e.g., data structure, specific requirements), ask for clarification first.
 
-If a user asks a question that is nothing to do with data analysis or R you you must generate a very short response."""
-            
-            # Create a container for the response
-            st.markdown('<div class="response-container">', unsafe_allow_html=True)
-            
-            # Generator function for streaming
-            def stream_response():
+If a user asks a question that is nothing to do with data analysis or R you must generate a very short response."""
+                
+                # Stream response
+                response_placeholder = st.empty()
+                full_response = ""
+                
                 with client.messages.stream(
                     model="claude-sonnet-4-5-20250929",
                     max_tokens=20000,
@@ -192,46 +279,55 @@ If a user asks a question that is nothing to do with data analysis or R you you 
                     }]
                 ) as stream:
                     for text in stream.text_stream:
-                        yield text
-            
-            # Stream and collect the response
-            full_response = st.write_stream(stream_response())
-            
-            # Remove scratchpad content before displaying
-            cleaned_response = remove_scratchpad(full_response)
-            
-            # Clear the container and show cleaned response
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.markdown('<div class="response-container">', unsafe_allow_html=True)
-            st.markdown(cleaned_response)
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            # Add action buttons
-            col1, col2 = st.columns(2)
-            with col1:
-                st.download_button(
-                    label="📥 Download Code",
-                    data=cleaned_response,
-                    file_name="r_solution.R",
-                    mime="text/plain"
-                )
-            with col2:
-                if st.button("⭐ New Question"):
-                    st.session_state.current_question = ''
-                    st.rerun()
-            
-        except Exception as e:
-            st.error(f"❌ Oops! Something went wrong: {str(e)}")
-            st.info("💡 Try refreshing the page or checking your API key.")
+                        full_response += text
+                        # Remove scratchpad in real-time
+                        cleaned = remove_scratchpad(full_response)
+                        response_placeholder.markdown(cleaned)
+                
+                # Final cleaned response
+                cleaned_response = remove_scratchpad(full_response)
+                
+                # Display in clean box
+                st.markdown('<div class="response-box">', unsafe_allow_html=True)
+                st.markdown(cleaned_response)
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+                # Action buttons
+                col1, col2, col3 = st.columns([2, 2, 1])
+                
+                with col1:
+                    st.download_button(
+                        label="📥 Download Code",
+                        data=cleaned_response,
+                        file_name="r_solution.R",
+                        mime="text/plain",
+                        use_container_width=True
+                    )
+                
+                with col2:
+                    if st.button("🔄 Ask Another Question", use_container_width=True):
+                        st.session_state.current_question = ''
+                        st.session_state.show_examples = True
+                        st.rerun()
+                
+            except Exception as e:
+                st.error(f"❌ Error: {str(e)}")
+                st.info("💡 Please check your API key and try again")
 
-elif submit_button and not r_question:
-    st.warning("🤔 Please enter a question first!")
+# Tips section (minimal)
+with st.expander("💡 Tips for better results"):
+    st.markdown("""
+    **Get the most helpful responses:**
+    - Be specific about your data structure and variables
+    - Mention any packages you prefer (tidyverse, data.table, etc.)
+    - Share error messages if you're debugging
+    - Specify your desired output format
+    """)
 
 # Footer
 st.markdown("---")
 st.markdown("""
-    <div style='text-align: center; color: white; padding: 20px;'>
-        <p>Made with ❤️ using Streamlit and Claude AI | 
-        <a href='https://www.anthropic.com' style='color: #ffd89b;'>Learn more about Claude</a></p>
+    <div style='text-align: center; color: #999; font-size: 14px; padding: 1rem;'>
+        Powered by Claude Sonnet 4.5 | Built with Streamlit
     </div>
 """, unsafe_allow_html=True)
