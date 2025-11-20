@@ -50,6 +50,7 @@ st.markdown("""
         font-size: 16px;
         padding: 16px;
         transition: all 0.3s ease;
+        color: #000000 !important;
     }
     
     .stTextArea textarea:focus {
@@ -178,8 +179,6 @@ st.markdown("""
 # Initialize session state
 if 'current_question' not in st.session_state:
     st.session_state.current_question = ''
-if 'show_examples' not in st.session_state:
-    st.session_state.show_examples = True
 
 # Get API key
 try:
@@ -189,24 +188,22 @@ except KeyError:
     st.stop()
 
 # Example questions (collapsible)
-if st.session_state.show_examples:
-    with st.expander("💡 Try these examples", expanded=False):
-        examples = [
-            "How do I create a violin plot with ggplot2?",
-            "Read and clean CSV data with dplyr",
-            "Build a linear regression model",
-            "Pivot data from wide to long format",
-            "Create a correlation heatmap",
-            "Handle missing values in a dataset"
-        ]
-        
-        cols = st.columns(2)
-        for idx, example in enumerate(examples):
-            with cols[idx % 2]:
-                if st.button(example, key=f"ex_{idx}", use_container_width=True):
-                    st.session_state.current_question = example
-                    st.session_state.show_examples = False
-                    st.rerun()
+with st.expander("💡 Try these examples", expanded=False):
+    examples = [
+        "How do I create a violin plot with ggplot2?",
+        "Read and clean CSV data with dplyr",
+        "Build a linear regression model",
+        "Pivot data from wide to long format",
+        "Create a correlation heatmap",
+        "Handle missing values in a dataset"
+    ]
+    
+    cols = st.columns(2)
+    for idx, example in enumerate(examples):
+        with cols[idx % 2]:
+            if st.button(example, key=f"ex_{idx}", use_container_width=True):
+                st.session_state.current_question = example
+                st.rerun()
 
 # Main question input
 r_question = st.text_area(
@@ -217,9 +214,6 @@ r_question = st.text_area(
     key="question_input",
     label_visibility="visible"
 )
-
-# Update session state
-st.session_state.current_question = r_question
 
 # Submit button
 submit_button = st.button("✨ Generate Solution", type="primary", use_container_width=True)
@@ -234,9 +228,6 @@ if submit_button:
     if not r_question:
         st.warning("👆 Please enter your question above")
     else:
-        # Hide examples after first submission
-        st.session_state.show_examples = False
-        
         with st.spinner('🔮 Generating your solution...'):
             try:
                 client = anthropic.Anthropic(api_key=api_key)
@@ -307,7 +298,6 @@ If a user asks a question that is nothing to do with data analysis or R you must
                 with col2:
                     if st.button("🔄 Ask Another Question", use_container_width=True):
                         st.session_state.current_question = ''
-                        st.session_state.show_examples = True
                         st.rerun()
                 
             except Exception as e:
