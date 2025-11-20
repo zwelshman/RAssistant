@@ -275,7 +275,8 @@ If the question lacks necessary details (e.g., data structure, specific requirem
 
 If a user asks a question that is nothing to do with data analysis or R you must generate a very short response."""
                 
-                # Stream response
+                # Stream response in a container
+                st.markdown('<div class="response-box">', unsafe_allow_html=True)
                 response_placeholder = st.empty()
                 full_response = ""
                 
@@ -297,13 +298,10 @@ If a user asks a question that is nothing to do with data analysis or R you must
                         cleaned = remove_scratchpad(full_response)
                         response_placeholder.markdown(cleaned)
                 
-                # Final cleaned response
-                cleaned_response = remove_scratchpad(full_response)
-                
-                # Display in clean box
-                st.markdown('<div class="response-box">', unsafe_allow_html=True)
-                st.markdown(cleaned_response)
                 st.markdown('</div>', unsafe_allow_html=True)
+                
+                # Get final cleaned response for download
+                cleaned_response = remove_scratchpad(full_response)
                 
                 # Action buttons
                 col1, col2, col3 = st.columns([2, 2, 1])
