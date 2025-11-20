@@ -259,7 +259,7 @@ if submit_button:
     if not r_question:
         st.warning("👆 Please enter your question above")
     else:
-        with st.spinner('🔮 Generating your solution...'):
+        with st.spinner('🔮 Conjuring your solution...'):
             try:
                 client = anthropic.Anthropic(api_key=api_key)
                 
