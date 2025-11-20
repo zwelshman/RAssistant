@@ -170,7 +170,10 @@ Provide one code example that is specific to health care, do not include a lot o
 
 Use <scratchpad> tags if you need to think through complex multi-step problems before responding. 
 
-If the question lacks necessary details (e.g., data structure, specific requirements), ask for clarification first."""
+If the question lacks necessary details (e.g., data structure, specific requirements), ask for clarification first.
+
+If a user asks a question that is nothing to do with data analysis or R you are obliged to ask if they are using the right tool
+for the job."""
             
             # Create a container for the response
             st.markdown('<div class="response-container">', unsafe_allow_html=True)
