@@ -161,14 +161,13 @@ Here is the R question or problem you need to solve:
 {r_question}
 </r_question>
 
-Provide your response in two parts:
+Provide your response in two parts and with one code example that is specific to health care, do not include
+a lot of methods or examples:
 
 1. **R Code**: Well-commented, production-ready R code following best practices
 2. **Summary**: Brief explanation of the approach, key functions used, and any important considerations
 
-Use <scratchpad> tags if you need to think through complex multi-step problems before responding.
-
-Only generate one example code reponse to the specific question and make all examples related to healthcare and electronic records. 
+Use <scratchpad> tags if you need to think through complex multi-step problems before responding. 
 
 If the question lacks necessary details (e.g., data structure, specific requirements), ask for clarification first."""
             
