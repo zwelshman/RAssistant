@@ -13,7 +13,7 @@ except KeyError:
     st.stop()
 
 # Question input
-r_question = st.text_area("Enter your R question:", height=150)
+R_QUESTION = st.text_area("Enter your R question:", height=150)
 
 def format_response(text):
     """Format the response to display R code with syntax highlighting."""
