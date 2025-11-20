@@ -40,7 +40,7 @@ Provide your response in two parts:
 1. **R Code**: Well-commented, production-ready R code following best practices of the specifc question.
 2. **Summary**: Brief explanation of the approach, key functions used, and any important considerations.
 
-Provide one code example that is specific to health care, do not include a lot of methods or examples.
+Provide one code example that is specific.
 
 Make the example as simple as possible. Just address the specific question.
 
