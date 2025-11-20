@@ -142,6 +142,12 @@ with col2:
     st.markdown("<br>", unsafe_allow_html=True)
     submit_button = st.button("🚀 Get Solution", use_container_width=True)
 
+def remove_scratchpad(text):
+    """Remove scratchpad tags and their content from the response."""
+    # Remove everything between <scratchpad> and </scratchpad> tags
+    cleaned_text = re.sub(r'<scratchpad>.*?</scratchpad>', '', text, flags=re.DOTALL)
+    return cleaned_text.strip()
+
 if submit_button and r_question:
     with st.spinner('🔮 Conjuring your R solution...'):
         try:
@@ -189,6 +195,13 @@ If the question lacks necessary details (e.g., data structure, specific requirem
             # Stream and collect the response
             full_response = st.write_stream(stream_response())
             
+            # Remove scratchpad content before displaying
+            cleaned_response = remove_scratchpad(full_response)
+            
+            # Clear the container and show cleaned response
+            st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown('<div class="response-container">', unsafe_allow_html=True)
+            st.markdown(cleaned_response)
             st.markdown('</div>', unsafe_allow_html=True)
             
             # Add action buttons
@@ -196,7 +209,7 @@ If the question lacks necessary details (e.g., data structure, specific requirem
             with col1:
                 st.download_button(
                     label="📥 Download Code",
-                    data=full_response,
+                    data=cleaned_response,
                     file_name="r_solution.R",
                     mime="text/plain"
                 )
