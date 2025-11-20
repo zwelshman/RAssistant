@@ -1,5 +1,6 @@
 import streamlit as st
 import anthropic
+import re
 
 st.title("R Programming Assistant")
 st.write("Ask me any R programming question!")
@@ -15,12 +16,25 @@ if api_key:
 # Question input
 r_question = st.text_area("Enter your R question:", height=150)
 
+def format_response(text):
+    """Format the response to display R code with syntax highlighting."""
+    # Split by <r_code> tags
+    parts = re.split(r'<r_code>|</r_code>', text)
+    
+    formatted_output = []
+    for i, part in enumerate(parts):
+        if i % 2 == 0:  # Text outside r_code tags
+            formatted_output.append(('text', part))
+        else:  # Code inside r_code tags
+            formatted_output.append(('code', part))
+    
+    return formatted_output
+
 if st.button("Get Answer") and api_key and r_question:
     try:
         client = anthropic.Anthropic(api_key=api_key)
         
         # Create empty container for streaming response
-        response_container = st.empty()
         full_response = ""
         
         # Stream the response
@@ -38,10 +52,15 @@ if st.button("Get Answer") and api_key and r_question:
         ) as stream:
             for text in stream.text_stream:
                 full_response += text
-                response_container.markdown(full_response + "▌")
         
-        # Final response without cursor
-        response_container.markdown(full_response)
+        # Format and display the final response
+        formatted_parts = format_response(full_response)
+        
+        for part_type, content in formatted_parts:
+            if part_type == 'text':
+                st.markdown(content)
+            else:  # code
+                st.code(content, language='r')
         
     except Exception as e:
         st.error(f"Error: {str(e)}")
