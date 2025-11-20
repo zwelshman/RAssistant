@@ -68,7 +68,8 @@ If a user asks a question that is nothing to do with data analysis or R you must
         message_placeholder = st.empty()
         
         with client.messages.stream(
-            model="claude-sonnet-4-5-20250929",
+            #model="claude-sonnet-4-5-20250929",
+            model='claude-haiku-4-5-20251001'
             max_tokens=8000,
             messages=messages_with_context
         ) as stream:
